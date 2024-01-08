@@ -4,11 +4,60 @@ from tkinter import Tk
 class SClientModel(object):
     def __init__(self):
         self._room_nr = ""
-        self._brokerIP = ""
-        self._interval = 0
+        self._broker_ip = ""
+        self._broker_port = 0
+        self._interval = 0.0
         self._temperature = 0.0
         self._temperature_limit = 0.0
         self._humidity = False
+
+    @property
+    def room_nr(self):
+        pass
+
+    @room_nr.setter
+    def room_nr(self, value: str):
+        self._room_nr = value
+
+    @room_nr.getter
+    def room_nr(self) -> str:
+        return self._room_nr
+
+    @property
+    def broker_ip(self):
+        pass
+
+    @broker_ip.setter
+    def broker_ip(self, value: str):
+        self._broker_ip = value
+
+    @broker_ip.getter
+    def broker_ip(self) -> str:
+        return self._broker_ip
+
+    @property
+    def broker_port(self):
+        pass
+
+    @broker_port.setter
+    def broker_port(self, value: int):
+        self._broker_port = value
+
+    @broker_port.getter
+    def broker_port(self) -> int:
+        return self._broker_port
+
+    @property
+    def interval(self):
+        pass
+
+    @interval.setter
+    def interval(self, value: float):
+        self._interval = value
+
+    @interval.getter
+    def interval(self) -> float:
+        return self._interval
 
     @property
     def temperature(self):
@@ -21,6 +70,18 @@ class SClientModel(object):
     @temperature.getter
     def temperature(self) -> float:
         return self._temperature
+
+    @property
+    def temperature_limit(self):
+        pass
+
+    @temperature_limit.setter
+    def temperature_limit(self, value: float):
+        self._temperature_limit = value
+
+    @temperature_limit.getter
+    def temperature_limit(self) -> float:
+        return self._temperature_limit
 
     @property
     def humidity(self):
