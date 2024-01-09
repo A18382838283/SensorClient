@@ -1,5 +1,6 @@
-import sys
+import paho.mqtt.client as mqtt
 from tkinter import Tk
+from configparser import ConfigParser
 
 
 class SClientModel(object):
@@ -103,33 +104,42 @@ class SClientView(Tk):
 
 class SClientController(object):
     def __init__(self):
-        self._model = SClientModel()  # model
-        self._view = SClientView()  # view
-        self.init()  # init
-
-    def init(self):
+        self._model = SClientModel()
+        self._view = SClientView()
+        self.init()
         self.init_model()
         self.init_view()
 
-    def init_model(self):
+        client_id = "SensorClient-" + self.model.room_nr
+        print("ClientID: " + client_id)
+
         try:
-            file = open("client.config")
-            try:
-                self.model.room_nr = file.readline().rstrip()
-                self.model.broker_ip = file.readline().rstrip()
-                self.model.broker_port = file.readline().rstrip()
-                self.model.interval = int(file.readline().rstrip())
-            finally:
-                file.close()
+            self.client = mqtt.Client(client_id)
+            self.client.connect(self.model.broker_ip)
         except Exception as e:
             raise e
+
+    def init(self):
+        pass
+
+    def init_model(self):
+        self.refresh()
 
     def init_view(self):
         pass
 
     def refresh(self):
-        self.model.temperature = 0.0
-        self.model.humidity = False
+        config = ConfigParser()
+        try:
+            config.read("config.ini")
+            self.model.room_nr = config.get('settings', 'room_nr')
+            self.model.broker_ip = config.get('settings', 'broker_ip')
+            self.model.broker_port = config.get('settings', 'broker_port')
+            self.model.interval = config.getint('settings', 'interval')
+            self.model.temperature_limit = config.getfloat('settings', 'temperature_limit')
+        except Exception as e:
+            raise e
+
 
     @property
     def model(self):
