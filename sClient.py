@@ -121,8 +121,8 @@ class SClientController(object):
                 self.model.interval = int(file.readline().rstrip())
             finally:
                 file.close()
-        except FileNotFoundError as fnf:
-            raise fnf
+        except Exception as e:
+            raise e
 
     def init_view(self):
         pass
