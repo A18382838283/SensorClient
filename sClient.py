@@ -157,6 +157,7 @@ class SClientController:
                 dump = json.dumps({"Test": str(random.randint(1, 1000)), "Test2": str(random.randint(1, 10000))})
 
                 self.client.publish("data/sensorclient", dump)
+                print(dump)
                 time.sleep(self.model.interval)
         finally:
             self.client.loop_stop()
