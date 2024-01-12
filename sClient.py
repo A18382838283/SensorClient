@@ -1,13 +1,18 @@
-import paho.mqtt.client as mqtt
+import json
+import logging
+import random
+import time
+
+import paho.mqtt.client as paho
 from tkinter import Tk
 from configparser import ConfigParser
 
 
-class SClientModel(object):
+class SClientModel:
     def __init__(self):
         self._room_nr = ""
         self._broker_ip = ""
-        self._broker_port = ""
+        self._broker_port = 0
         self._interval = 0
         self._temperature = 0.0
         self._temperature_limit = 0.0
@@ -42,11 +47,11 @@ class SClientModel(object):
         pass
 
     @broker_port.setter
-    def broker_port(self, value: str):
+    def broker_port(self, value: int):
         self._broker_port = value
 
     @broker_port.getter
-    def broker_port(self) -> str:
+    def broker_port(self) -> int:
         return self._broker_port
 
     @property
@@ -102,33 +107,24 @@ class SClientView(Tk):
     pass
 
 
-class SClientController(object):
+class SClientController:
     def __init__(self):
         self._model = SClientModel()
         self._view = SClientView()
         self.init()
-        self.init_model()
-        self.init_view()
-
-        client_id = "SensorClient-" + self.model.room_nr
-        print("ClientID: " + client_id)
+        self.client_id = "SensorClient-" + self.model.room_nr
+        self.client = paho.Client(self.client_id)
 
         try:
-            self.client = mqtt.Client(client_id)
-            self.client.connect(self.model.broker_ip)
+            self.client.connect(self.model.broker_ip, int(self.model.broker_port))
         except Exception as e:
             raise e
 
     def init(self):
-        pass
+        self.init_model()
+        self.init_view()
 
     def init_model(self):
-        self.refresh()
-
-    def init_view(self):
-        pass
-
-    def refresh(self):
         config = ConfigParser()
         try:
             config.read("config.ini")
@@ -140,6 +136,31 @@ class SClientController(object):
         except Exception as e:
             raise e
 
+    def init_view(self):
+        pass
+
+    def refresh(self):
+        try:
+            self.client.reconnect()
+        except Exception as e:
+            raise e
+
+    def run(self):
+        def on_publish(client, userdata, mid):
+            print(self.client_id + ": Message Published (Message-ID: " + str(mid) + ")")
+
+        try:
+            self.client.on_publish = on_publish
+            self.client.loop_start()
+
+            while True:
+                dump = json.dumps({"Test": str(random.randint(1, 1000)), "Test2": str(random.randint(1, 10000))})
+
+                self.client.publish("data/sensorclient", dump)
+                time.sleep(self.model.interval)
+        finally:
+            self.client.loop_stop()
+            self.client.disconnect()
 
     @property
     def model(self):
