@@ -31,14 +31,16 @@ class SensorClient:
         except Exception as e:
             raise e
 
-        print('client_id = ' + str(self.client_id))
-        print('broker_ip = ' + str(self.broker_ip))
-        print('broker_port = ' + str(self.broker_port))
-        print('interval = ' + str(self.interval))
-        print('temperature_limit = ' + str(self.temperature_limit))
+        print('[--------------Config-------------]')
+        print('Client-ID: ' + str(self.client_id))
+        print('Broker-IP: ' + str(self.broker_ip))
+        print('Broker-Port: ' + str(self.broker_port))
+        print('Interval: ' + str(self.interval))
+        print('Temperature-Limit: ' + str(self.temperature_limit))
 
     def run(self):
         try:
+            print('[--------------Log----------------]')
             self.client.reconnect()
 
             while True:

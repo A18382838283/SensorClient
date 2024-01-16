@@ -17,7 +17,7 @@ from typing import Tuple
 class ServerRaumHTTPHandler(BaseHTTPRequestHandler):
     # die Variablen sind static, weil für jeden GET Request eine neue Instanz des ServerRaumHTTPServer
     # erzeugt wird und der SensorClient nicht an die Objektmember herankommt
-    room = 0
+    room = 200
     temp = 0
     water = 0
     tlimit = 0
