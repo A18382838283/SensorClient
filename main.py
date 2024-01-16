@@ -1,4 +1,4 @@
-from sClient import SClientController
+import sClient
 
-client = SClientController()
-client.run()
+sensorclient = sClient.SensorClient()
+sensorclient.run()

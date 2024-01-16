@@ -1,0 +1,17 @@
+body
+{
+    background-color: blue;
+}
+
+
+p, h1
+{
+    color: white;
+}
+
+span
+{
+    border: 2px red solid;
+    padding: 3px;
+}
+
